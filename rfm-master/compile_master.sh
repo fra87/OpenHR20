@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -o nounset
 set -o errexit
@@ -42,13 +42,20 @@ while [ "$#" -ne 0 ]; do
 		RFM_FREQ=$2; shift; shift;
 	else
 		echo "unknown options starting at $*"
-		echo "e.g. $0 [--key <k0> <k1> <k2> <k3> <k4> <k5> <k6> <k7>] [--HW NANODE|...] [--freq <freq>] [--pass <passphrase>]"
-		[ "$REMOTE_ONLY" != "0" ] && REMOTE_ONLY_STRING="-remoteOnly" || REMOTE_ONLY_STRING=""
-		[ -z "$ADDR" ] && ADDR="<Not set>"
-		echo "defaults: --key $KEY0 $KEY1 $KEY2 $KEY3 $KEY4 $KEY5 $KEY6 $KEY7 --HW $HW --addr $ADDR $REMOTE_ONLY_STRING"
+		echo "e.g. $0 [--key <k0> <k1> <k2> <k3> <k4> <k5> <k6> <k7>] [--HW NANODE|JEENODE|...] [--freq <freq>] [--pass <passphrase>]"
+		echo "defaults: --key $KEY0 $KEY1 $KEY2 $KEY3 $KEY4 $KEY5 $KEY6 $KEY7 --HW $HW --freq $RFM_FREQ"
 		exit 1
 	fi
 done
+
+case "$HW" in
+	NANODE|JEENODE)
+		HW_STRING="${HW}=1"
+		;;
+	*)
+		HW_STRING=""
+		;;
+esac
 
 make -C ${SCRIPTPATH} clean
 make -C ${SCRIPTPATH} \
@@ -64,4 +71,4 @@ SECURITY_KEY_4=0x${KEY4} \
 SECURITY_KEY_5=0x${KEY5} \
 SECURITY_KEY_6=0x${KEY6} \
 SECURITY_KEY_7=0x${KEY7} \
-{$HW}=1
+${HW_STRING}
