@@ -11,22 +11,29 @@ fi
 
 UNIT_FOLDER=$(realpath ${SCRIPTPATH}/../../src)
 MASTER_FOLDER=$(realpath ${SCRIPTPATH}/../../rfm-master)
-UNIT_EEP=$UNIT_PREFIX.eep
-UNIT_HEX=$UNIT_PREFIX.hex
+UNIT_EEP=$(GetUnitPrefix $UNIT_HW).eep
+UNIT_HEX=$(GetUnitPrefix $UNIT_HW).hex
 MASTER_EEP=master.eep
 MASTER_HEX=master.hex
-DST_FOLDER=$(realpath ${SCRIPTPATH}/../../bin)
+DST_FOLDER=$(realpath ${SCRIPTPATH}/../../${BIN_FOLDER})
 
 # Compile units
 for addr in "${ADDRESSES[@]}"; do
 	echo ""
 	echo "************************************************"
+	if ! ValidUnitAddress "$addr"; then
+		echo " Address $addr not valid; skipping" >&2
+		echo "************************************************"
+		echo ""
+		continue
+	fi
+
 	echo " Compiling unit #$addr"
 	echo "************************************************"
 	echo ""
 	${UNIT_FOLDER}/compile_unit.sh --addr $addr ${SECRET} --hw $UNIT_HW --freq $RFM_FREQ --rfm-wire $UNIT_RFM_WIRE >/dev/null || { echo ""; echo "Compilation failed for unit $addr; aborting" ; exit 1; }
-	mv ${UNIT_FOLDER}/${UNIT_HEX} ${DST_FOLDER}/unit_${addr}.hex
-	mv ${UNIT_FOLDER}/${UNIT_EEP} ${DST_FOLDER}/unit_${addr}.eep
+	mv ${UNIT_FOLDER}/${UNIT_HEX} ${DST_FOLDER}/$(GetBinaryFileName HEX UNIT ${addr})
+	mv ${UNIT_FOLDER}/${UNIT_EEP} ${DST_FOLDER}/$(GetBinaryFileName EEPROM UNIT ${addr})
 	make -C ${UNIT_FOLDER} clean HW=$UNIT_HW >/dev/null
 done
 
@@ -37,8 +44,8 @@ echo " Compiling master"
 echo "************************************************"
 echo ""
 ${MASTER_FOLDER}/compile_master.sh ${SECRET} --hw "$MASTER_HW" --freq $RFM_FREQ >/dev/null || { echo ""; echo "Compilation failed for master; aborting" ; exit 1; }
-mv ${MASTER_FOLDER}/${MASTER_HEX} ${DST_FOLDER}/master.hex
-mv ${MASTER_FOLDER}/${MASTER_EEP} ${DST_FOLDER}/master.eep
+mv ${MASTER_FOLDER}/${MASTER_HEX} ${DST_FOLDER}/$(GetBinaryFileName HEX MASTER)
+mv ${MASTER_FOLDER}/${MASTER_EEP} ${DST_FOLDER}/$(GetBinaryFileName EEPROM MASTER)
 make -C ${MASTER_FOLDER} clean >/dev/null
 
 
