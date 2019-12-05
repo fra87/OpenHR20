@@ -1,0 +1,49 @@
+# Fuses for ATmega329PA
+
+# Table 28-3: Extended Fuse Byte
+#           | Bit | Description            | Def. Value
+# ------------------------------------------------------
+# –         |  7  | –                      |     1
+# –         |  6  | –                      |     1
+# –         |  5  | –                      |     1
+# –         |  4  | –                      |     1
+# BODLEVEL2 |  3  | Brown-out level        |     1
+# BODLEVEL1 |  2  | Brown-out level        |     1
+# BODLEVEL0 |  1  | Brown-out level        |     1
+# RSTDISBL  |  0  | External Reset Disable |     1
+
+# BOD Disabled, external reset enabled
+EFUSE=0xFF
+
+# Table 28-4: Fuse High Byte
+#           | Bit | Description            | Def. Value
+# ------------------------------------------------------
+# OCDEN     |  7  | Enable OCD             |     1
+# JTAGEN    |  6  | Enable JTAG            |     0
+# SPIEN     |  5  | Enable SPI Programming |     0
+# WDTON     |  4  | WDT always on          |     1
+# EESAVE    |  3  | EEPROM saved on Erase  |     1
+# BOOTSZ1   |  2  | Select Boot Size       |     0
+# BOOTSZ0   |  1  | Select Boot Size       |     0
+# BOOTRST   |  0  | Select Reset Vector    |     1
+
+# OCD disabled, JTAG and SPI enabled, WDT off,
+# Boot size 256 words (minimum), default reset address
+HFUSE_PROTECTED_EEPROM=0x97
+HFUSE_UNPROTECTED_EEPROM=0x9f
+
+# Table 28-5: Fuse Low Byte
+#           | Bit | Description            | Def. Value
+# ------------------------------------------------------
+# CKDIV8    |  7  | Divide clock by 8      |     0
+# CKOUT     |  6  | Clock output           |     1
+# SUT1      |  5  | Select start-up time   |     1
+# SUT0      |  4  | Select start-up time   |     0
+# CKSEL3    |  3  | Select Clock source    |     0
+# CKSEL2    |  2  | Select Clock source    |     0
+# CKSEL1    |  1  | Select Clock source    |     1
+# CKSEL0    |  0  | Select Clock source    |     0
+
+# Clock output not present, maximum start up time (6CK+65ms)
+# Clock at 1MHz (derived from internal RC @8MHz)
+LFUSE=0x62
