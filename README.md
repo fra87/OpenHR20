@@ -1,4 +1,4 @@
-svn-openhr20
+Openhr20
 ============
 
 Clone of openhr20.svn.sourceforge.net.
