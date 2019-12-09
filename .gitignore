@@ -35,3 +35,6 @@ rfm-master/master.txt
 bin/*
 !bin/ReadMe.txt
 *.gch
+
+# Remove personal configurations
+/tools/EnvironmentBuilder/personal.config

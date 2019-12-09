@@ -20,6 +20,7 @@ KEY5=ab
 KEY6=cd
 KEY7=ef
 RFM_FREQ=868
+RFM_WIRE=MARIOJTAG
 
 while [ "$#" -ne 0 ]; do
 	if [ "$1" == "--addr" ]; then
@@ -47,12 +48,14 @@ while [ "$#" -ne 0 ]; do
 		REMOTE_ONLY=1; shift;
 	elif [ "$1" == "--freq" ]; then
 		RFM_FREQ=$2; shift; shift;
+	elif [ "$1" == "--rfm-wire" ]; then
+		RFM_WIRE=$2; shift; shift;
 	else
 		echo "unknown options starting at $*"
-		echo "e.g. $0 [--key <k0> <k1> <k2> <k3> <k4> <k5> <k6> <k7>] [--HW HONEYWELL|HR25|THERMOTRONIC] [--addr <addr>] [--freq <freq>] [-remoteOnly] [--pass <passphrase>]"
-		[ "$REMOTE_ONLY" != "0" ] && REMOTE_ONLY_STRING="-remoteOnly" || REMOTE_ONLY_STRING=""
+		echo "e.g. $0 [--key <k0> <k1> <k2> <k3> <k4> <k5> <k6> <k7>] [--HW HONEYWELL|HR25|THERMOTRONIC] [--addr <addr>] [--freq <freq>] [--remoteOnly] [--pass <passphrase>]"
+		[ "$REMOTE_ONLY" != "0" ] && REMOTE_ONLY_STRING="--remoteOnly" || REMOTE_ONLY_STRING=""
 		[ -z "$ADDR" ] && ADDR="<Not set>"
-		echo "defaults: --key $KEY0 $KEY1 $KEY2 $KEY3 $KEY4 $KEY5 $KEY6 $KEY7 --HW $HW --addr $ADDR $REMOTE_ONLY_STRING"
+		echo "defaults: --key $KEY0 $KEY1 $KEY2 $KEY3 $KEY4 $KEY5 $KEY6 $KEY7 --HW $HW --addr $ADDR $REMOTE_ONLY_STRING --freq $RFM_FREQ --rfm-wire $RFM_WIRE"
 		exit 1
 	fi
 done
@@ -79,6 +82,6 @@ SECURITY_KEY_6=0x${KEY6} \
 SECURITY_KEY_7=0x${KEY7} \
 RFM_DEVICE_ADDRESS=${ADDR} \
 HW=${HW} \
-RFM_WIRE=MARIOJTAG \
+RFM_WIRE=${RFM_WIRE} \
 REMOTE_SETTING_ONLY=${REMOTE_ONLY} \
 MOTOR_COMPENSATE_BATTERY=1
